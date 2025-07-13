@@ -14,7 +14,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { verifySchema } from '@/schemas/verifySchema';
@@ -38,6 +38,14 @@ export default function VerifyAccount() {
     resolver: zodResolver(verifySchema),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const quesry = useSearchParams()
+  const code = quesry.get('otp')
+  useEffect(() => {
+    if (code) {
+      form.setValue('code', code);
+    }
+  }, [code, form]);
 
   
 
@@ -98,9 +106,9 @@ export default function VerifyAccount() {
         variant: 'destructive',
       });
       setResendCode(false)
-    }finally{() => {
+    }finally {
       setResendCode(false)
-    }}
+    }
   }
 
 
